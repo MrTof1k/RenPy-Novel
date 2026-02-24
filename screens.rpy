@@ -1,4 +1,4 @@
-﻿################################################################################
+################################################################################
 ## Инициализация
 ################################################################################
 
@@ -63,6 +63,11 @@ style button:
 style button_text is gui_text:
     properties gui.text_properties("button")
     yalign 0.5
+    hover_color "#18b984"      # цвет при наведении (красный)
+    idle_color "#ffffffbd"       # обычный цвет (белый)
+    selected_color "#00ff00"    # цвет выбранной кнопки (зеленый)
+    insensitive_color "#808080" # цвет недоступной кнопки (серый)
+    text_align 0.5
 
 
 style label_text is gui_text:
@@ -315,55 +320,28 @@ style quick_button_text:
 ################################################################################
 
 ## Экран навигации #############################################################
-##
-## Этот экран включает в себя главное и игровое меню, и обеспечивает навигацию к
-## другим меню и к началу игры.
 
 screen navigation():
-
+    
     vbox:
-        style_prefix "navigation"
-
-        xpos gui.navigation_xpos
+        xalign 0.5
         yalign 0.5
-
-        spacing gui.navigation_spacing
-
+        spacing 20
+        
         if main_menu:
-
-            textbutton _("Начать") action Start()
-
+            textbutton _("Начать игру") action Start() style "main_menu_button"
+            textbutton _("Загрузить") action ShowMenu("load") style "main_menu_button"
+            textbutton _("Настройки") action ShowMenu("preferences") style "main_menu_button"
+            textbutton _("Об игре") action ShowMenu("about") style "main_menu_button"
+            textbutton _("Выход") action Quit(confirm=True) style "main_menu_button"
         else:
-
-            textbutton _("История") action ShowMenu("history")
-
-            textbutton _("Сохранить") action ShowMenu("save")
-
-        textbutton _("Загрузить") action ShowMenu("load")
-
-        textbutton _("Настройки") action ShowMenu("preferences")
-
-        if _in_replay:
-
-            textbutton _("Завершить повтор") action EndReplay(confirm=True)
-
-        elif not main_menu:
-
-            textbutton _("Главное меню") action MainMenu()
-
-        textbutton _("Об игре") action ShowMenu("about")
-
-        if renpy.variant("pc") or (renpy.variant("web") and not renpy.variant("mobile")):
-
-            ## Помощь не необходима и не относится к мобильным устройствам.
-            textbutton _("Помощь") action ShowMenu("help")
-
-        if renpy.variant("pc"):
-
-            ## Кнопка выхода блокирована в iOS и не нужна на Android и в веб-
-            ## версии.
-            textbutton _("Выход") action Quit(confirm=not main_menu)
-
+            textbutton _("История") action ShowMenu("history") style "navigation_button"
+            textbutton _("Сохранить") action ShowMenu("save") style "navigation_button"
+            textbutton _("Загрузить") action ShowMenu("load") style "navigation_button"
+            textbutton _("Настройки") action ShowMenu("preferences") style "navigation_button"
+            textbutton _("Главное меню") action MainMenu() style "navigation_button"
+            textbutton _("Об игре") action ShowMenu("about") style "navigation_button"
+            textbutton _("Выход") action Quit(confirm=False) style "navigation_button"
 
 style navigation_button is gui_button
 style navigation_button_text is gui_button_text
@@ -417,17 +395,18 @@ style main_menu_title is main_menu_text
 style main_menu_version is main_menu_text
 
 style main_menu_frame:
-    xsize 280
-    yfill True
-
+    xsize 280              # Ширина рамки
+    yfill True              # Рамка на всю высоту
+    xalign 0.5              # Добавьте ЭТУ строку - центрирует саму рамку
+    yalign 0.5              # Добавьте ЭТУ строку - центрирует саму рамку
     background "gui/overlay/main_menu.png"
 
 style main_menu_vbox:
-    xalign 1.0
-    xoffset -20
-    xmaximum 800
-    yalign 1.0
-    yoffset -20
+    xalign 0.5             # Меняем с 1.0 на 0.5 (центр по горизонтали)
+    xoffset 0               # Убираем смещение или настраиваем под себя
+    xmaximum 800            # Можно оставить или изменить
+    yalign 0.5              # Меняем с 1.0 на 0.5 (центр по вертикали)
+    yoffset 0     
 
 style main_menu_text:
     properties gui.text_properties("main_menu", accent=True)
@@ -506,7 +485,7 @@ screen game_menu(title, scroll=None, yinitial=0.0, spacing=0):
 
                     transclude
 
-    use navigation
+    # use navigation
 
     textbutton _("Вернуться"):
         style "return_button"
@@ -568,7 +547,7 @@ style game_menu_label_text:
 style return_button:
     xpos gui.navigation_xpos
     yalign 1.0
-    yoffset -30
+    yoffset -50
 
 
 ## Экран Об игре ###############################################################
@@ -1650,3 +1629,19 @@ style slider_vbox:
 style slider_slider:
     variant "small"
     xsize 600
+
+style main_menu_button:
+    xalign 0.5
+    text_align 0.5
+    
+style navigation_button is main_menu_button
+
+style my_chapter_select_button:
+    size 40
+    xalign 0.5
+    color "#ffffff"
+    hover_color '#15bb91'
+
+style chapter_button:
+    xalign 0.5
+    text_align 0.5
