@@ -1,4 +1,4 @@
-﻿init python:
+init python:
     risk_choice = False
     safe_choice = False
     wait_choice = False
@@ -62,6 +62,7 @@ init:
     image elin_perplexity = "Images/elin_perplexity.png"
 
     # другие спрайты 
+    image test_image = "gui/test.jpg" # фон для теста
     image ashot = "Images/ashot.png"
     image room = "Images/room.png"  # общая комната
     image agency = "Images/Real Estate Agency.png"
@@ -76,11 +77,14 @@ init:
 # ТОЧКА ВХОДА
 # ========================================
 label start:
+    
     # Показываем экран выбора персонажа
     call screen character_select
     
-    # После выбора переходим к истории
-    jump story_kv
+    # После выбора переходим к выбору истории
+    # call screen chapter_select
+    return
+
 
 
 # ========================================
@@ -89,7 +93,7 @@ label start:
 screen character_select:
     tag menu
     
-    # Фон экрана (чёрный)
+    # Фон экрана 
     add "gui/select_bg.jpg"
     
     # Заголовок
@@ -115,7 +119,7 @@ screen character_select:
                 SetVariable("player_document", "artem_document"),
                 SetVariable("player_agency", "artem_agency"),
                 SetVariable("player_perplexity", "artem_perplexity"),
-                Return()
+                ShowMenu("chapter_select")
             ]
         
         # Элин
@@ -132,7 +136,7 @@ screen character_select:
                 SetVariable("player_document", "elin_document"),
                 SetVariable("player_agency", "elin_agency"),
                 SetVariable("player_perplexity", "elin_perplexity"),
-                Return()
+                ShowMenu("chapter_select")
             ]
     
     # Кнопка "Назад"
@@ -142,11 +146,41 @@ screen character_select:
         yalign 0.95
         text_size 40
         text_color "#ffffff"
-        text_hover_color "#ff9900"
-
+        text_hover_color '#15bb91'
 
 # ========================================
-# ОСНОВНАЯ ИСТОРИЯ
+# Выбор главы
+# ========================================
+screen chapter_select():
+    tag menu
+    add "gui/main_chapter.jpg"
+    
+    vbox:
+        xalign 0.5
+        yalign 0.5
+        spacing 20
+        textbutton "Глава 1" action Start("story_kv"):
+            style "chapter_button"
+            text_style "my_chapter_select_button"
+
+        textbutton "Глава 2" action Start("story_car"):
+            style "chapter_button"
+            text_style "my_chapter_select_button"
+
+        textbutton "Глава 3" action Start("story_job"):
+            style "chapter_button"
+            text_style "my_chapter_select_button"
+
+    vbox:
+        xalign 0.5
+        yalign 0.95
+
+        textbutton "Назад" action ShowMenu("character_select"):
+            style "chapter_button"
+            text_style "my_chapter_select_button"
+
+# ========================================
+# ОСНОВНАЯ ИСТОРИЯ Главы 1 (квартира)
 # ========================================
 label story_kv:
     # Обновляем персонажа с выбранным именем
@@ -207,7 +241,7 @@ label story_kv:
 
 
 # ========================================
-# ФИНАЛЫ
+# ФИНАЛЫ для глава 1 (квартира)
 # ========================================
 label choice_a:
     
@@ -276,3 +310,17 @@ label next_scene_agency:
     "Придя на место [player_name] лицезреет заброшенное агентство"
     a "Нужно найти другого риелтора..."
     return
+
+# ========================================
+# ОСНОВНАЯ ИСТОРИЯ Главы 2 (машины)
+# ========================================
+label story_car:
+    scene test_image
+    "Нас плохо кормить, но мы стараться написать история"
+
+# ========================================
+# ОСНОВНАЯ ИСТОРИЯ Главы 3 (трудоустройство)
+# ========================================
+label story_job:
+    scene test_image
+    "Нас плохо кормить, но мы стараться написать история"
