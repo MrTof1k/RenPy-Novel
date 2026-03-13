@@ -1,4 +1,4 @@
-################################################################################
+﻿################################################################################
 ## Инициализация
 ################################################################################
 
@@ -333,6 +333,7 @@ screen navigation():
             textbutton _("Загрузить") action ShowMenu("load") style "main_menu_button"
             textbutton _("Настройки") action ShowMenu("preferences") style "main_menu_button"
             textbutton _("Об игре") action ShowMenu("about") style "main_menu_button"
+            textbutton _("Достижения") action ShowMenu("achievements_screen") style "main_menu_button"
             textbutton _("Выход") action Quit(confirm=True) style "main_menu_button"
         else:
             textbutton _("История") action ShowMenu("history") style "navigation_button"
@@ -549,6 +550,73 @@ style return_button:
     yalign 1.0
     yoffset -50
 
+## Экран Достижений ###############################################################
+##
+## Этот экран показывает список достижений в игре.
+
+screen achievements_screen():
+
+    tag menu
+
+    use game_menu("Достижения"):
+
+        $ unlocked_count, total_count = get_achievements_count()
+
+        vbox:
+            spacing 20
+            xfill True
+            yfill True
+
+            frame:
+                xalign 0.1
+                xsize 700
+                padding (20, 15)
+                background "#202020"
+
+                vbox:
+                    spacing 6
+
+                    text "Достижения [unlocked_count] / [total_count]" size 34 bold True
+                    # text "[unlocked_count] / [total_count] достижений открыто" size 22 color "#cccccc"
+
+            viewport:
+                scrollbars "vertical"
+                mousewheel True
+                draggable True
+                xalign 0.1
+                xsize 720
+                yfill True
+
+                vbox:
+                    spacing 15
+
+                    for achievement_id, data in ACHIEVEMENTS.items():
+
+                        if has_achievement(achievement_id):
+
+                            frame:
+                                xsize 700
+                                padding (20, 15)
+                                background "#1a1919"
+
+                                vbox:
+                                    spacing 6
+
+                                    text data["title"] size 28 bold True
+                                    text data["desc"] size 20 color "#cccccc"
+
+                        else:
+
+                            frame:
+                                xsize 700
+                                padding (20, 15)
+                                background "#111111"
+
+                                vbox:
+                                    spacing 6
+
+                                    text data["title"] size 26 color "#777777"
+                                    text "Откройте его в игре" size 18 color "#555555"
 
 ## Экран Об игре ###############################################################
 ##
@@ -556,6 +624,8 @@ style return_button:
 ##
 ## В этом экране нет ничего особенного, и он служит только примером того, каким
 ## можно сделать свой экран.
+
+    
 
 screen about():
 
@@ -1213,6 +1283,7 @@ style confirm_button_text:
     properties gui.text_properties("confirm_button")
 
 
+
 ## Экран индикатора пропуска ###################################################
 ##
 ## Экран индикатора пропуска появляется для того, чтобы показать, что идёт
@@ -1645,3 +1716,88 @@ style my_chapter_select_button:
 style chapter_button:
     xalign 0.5
     text_align 0.5
+
+
+## Экран паузы ###################################################
+##
+## Новый экран паузы
+screen pause_menu():
+
+    tag menu
+    modal True
+    zorder 200
+
+    add "gui/main_chapter.jpg"
+
+    frame:
+        xalign 0.5
+        yalign 0.5
+        xsize 560
+        yminimum 420
+        padding (35, 35)
+        background "#d9d9d9dd"
+
+        vbox:
+            spacing 18
+            xalign 0.5
+            yalign 0.5
+            xfill True
+
+            text "Пауза":
+                xalign 0.5
+                size 42
+                bold True
+                color "#2f2f2f"
+                text_align 0.5
+
+            null height 10
+
+            textbutton "Продолжить":
+                style "pause_button"
+                text_style "pause_button_text"
+                action Return()
+
+            textbutton "Сохранить":
+                style "pause_button"
+                text_style "pause_button_text"
+                action ShowMenu("save")
+
+            textbutton "Загрузить":
+                style "pause_button"
+                text_style "pause_button_text"
+                action ShowMenu("load")
+
+            textbutton "Достижения":
+                style "pause_button"
+                text_style "pause_button_text"
+                action ShowMenu("achievements_screen")
+
+            textbutton "Главное меню":
+                style "pause_button"
+                text_style "pause_button_text"
+                action MainMenu(confirm=True)
+
+            textbutton "Выход из игры":
+                style "pause_button"
+                text_style "pause_button_text"
+                action Quit(confirm=True)
+
+    key "game_menu" action Return()
+    key "K_ESCAPE" action Return()
+
+style pause_button is default:
+    xalign 0.5
+    xminimum 320
+    yminimum 52
+    background "#f4f4f4"
+    hover_background "#ffffff"
+    insensitive_background "#d0d0d0"
+    padding (12, 10)
+
+style pause_button_text is default:
+    xalign 0.5
+    text_align 0.5
+    size 24
+    color "#2f2f2f"
+    hover_color "#111111"
+    insensitive_color "#777777"
