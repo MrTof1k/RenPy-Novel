@@ -1,9 +1,9 @@
 ﻿init python:
     config.game_menu_action = ShowMenu("pause_menu")
     #Отладка достижений
-    persistent.unlocked_achievements = []
-    renpy.save_persistent()
-    renpy.notify("Достижения сброшены.")
+    # persistent.unlocked_achievements = []
+    # renpy.save_persistent()
+    # renpy.notify("Достижения сброшены.")
 
     risk_choice = False
     safe_choice = False
@@ -30,6 +30,10 @@
     player_maney = "artem_maney" #Спрайт протягивает деньги
     player_receipt = "artem_receipt"
     player_agency = "artem_agency"
+    player_crying = "artem_crying"
+    player_mfc = "artem_mfc"
+    player_mfc_tiket = "artem_mfc_tiket"
+    player_mfc_window = "artem_mfc_window"
 
 # Трансформации
 transform pos_far_left_active:
@@ -77,25 +81,34 @@ init:
     image artem_perplexity = "Images/artem_character/artem_perplexity.png"
     image artem_interested = "Images/artem_character/artem_interested.png"
     image artem_agency = "Images/artem_character/artem_agency.png"
+    image artem_call = "Images/artem_character/artem_call.png"
     image artem_maney = "Images/artem_character/artem_maney.png" #Протягивает деньги
     image artem_robbery = "Images/artem_scene/artem_robbery.png" #Пойман при грабедже
     image artem_prison = "Images/artem_scene/artem_prison_img.png" #За решёткой
     image artem_strit = "Images/artem_scene/artem_strit.png" #Артём на улице
     image artem_think = "Images/artem_scene/artem_think.png" #Артём думает
     image artem_receipt = "Images/artem_scene/artem_receipt.png"
-    image artem_agency = "Images/artem_scene/artem_receipt.png"
+    image artem_crying = "Images/artem_scene/artem_crying.png"
+    image artem_mfc = "Images/artem_scene/artem_mfc.png"
+    image artem_mfc_tiket = "Images/artem_scene/artem_mfc_tiket.png"
+    image artem_mfc_window = "Images/artem_scene/artem_mfc_window.png"
 
     # Спрайты Элин
     image elin_backpack = "Images/elin_character/elin_backpack.png" #Элин с рюкзаком
     image elin_perplexity = "Images/elin_character/elin_perplexity.png" #Элин в недоумении
     image elin_interested = "Images/elin_character/elin_interested.png"
-    image artem_agency = "Images/elin_character/elin_agency.png"
+    image elin_agency = "Images/elin_character/elin_agency.png"
+    image elin_call = "Images/elin_character/elin_call.png"
     image elin_maney = "Images/elin_character/elin_maney.png" #Протягивает деньги
     image elin_robbery = "Images/elin_scene/elin_robbery.png" #Поймана при грабедже
     image elin_prison = "Images/elin_scene/elin_prison_img.png" #За решёткой
     image elin_strit = "Images/elin_scene/elin_strit.png" #Элин на улице
     image elin_think = "Images/elin_scene/elin_think.png" #Элин думает
     image elin_receipt = "Images/elin_scene/elin_receipt.png"
+    image elin_crying = "Images/elin_scene/elin_crying.png"
+    image elin_mfc = "Images/elin_scene/elin_mfc.png"
+    image elin_mfc_tiket = "Images/elin_scene/elin_mfc_tiket.png"
+    image elin_mfc_window = "Images/elin_scene/elin_mfc_window.png"
 
     # Спрайты риелтора
     image realtor_interior_image = "Images/realtor/realtor interior image.png" #офис
@@ -106,7 +119,12 @@ init:
     image realtor_dmitriy_upset = "Images/realtor/realtor dmitriy upset.png" #Расстроенный 
     image realtor_dmitriy_record = "Images/realtor/realtor dmiriy record.png" #Риелтор пишет
     image realtor_bilding_image = "Images/realtor/realtor bilding image.png"
+    image realtor_dmitriy_call = "Images/realtor/realtor dmitriy call.png"
     
+
+    #Спрайты мфц
+    image mfc_holl = "Images/mfc/mfc_holl.png"
+
     # Спрайты банка
     image bank_scene_image = "Images/bank_scene/bank_scene.png" #фон банка
     image bank_specialist = "Images/bank_scene/bank_specialist.png" #специалист банка
@@ -130,6 +148,7 @@ init:
     define player = Character('[player_name]', color="#c8ffc8")
     default character_realtor = Character('Дмитрий', color = "#57ad4c")
     default bankir = Character('Специалист банка: ', color = "#57ad4c")
+    default mfc = Character('Сотрудник МФЦ', color = "#57ad4c")
 
 # ========================================
 # ТОЧКА ВХОДА
@@ -180,6 +199,11 @@ screen character_select:
                 SetVariable("player_maney", "artem_maney"),
                 SetVariable("player_receipt", "artem_receipt"),
                 SetVariable("player_agency", "artem_agency"),
+                SetVariable("player_call", "artem_call"),
+                SetVariable("player_crying", "artem_crying"),
+                SetVariable("player_mfc", "artem_mfc"),
+                SetVariable("player_mfc_tiket", "artem_mfc_tiket"),
+                SetVariable("player_mfc_window", "artem_mfc_window"),
                 ShowMenu("chapter_select")
             ]
         
@@ -201,6 +225,11 @@ screen character_select:
                 SetVariable("player_maney", "elin_maney"),
                 SetVariable("player_receipt", "elin_receipt"),
                 SetVariable("player_agency", "elin_agency"),
+                SetVariable("player_call", "elin_call"),
+                SetVariable("player_crying", "elin_crying"),
+                SetVariable("player_mfc", "elin_mfc"),
+                SetVariable("player_mfc_tiket", "elin_mfc_tiket"),
+                SetVariable("player_mfc_window", "elin_mfc_window"),
                 ShowMenu("chapter_select")
             ]
     
@@ -228,11 +257,11 @@ screen chapter_select():
             style "chapter_button"
             text_style "my_chapter_select_button"
 
-        textbutton "Глава 2" action Start("story_car"):
+        textbutton "Глава 2" action Start("test_map"):
             style "chapter_button"
             text_style "my_chapter_select_button"
 
-        textbutton "Глава 3" action Start("story_job"):
+        textbutton "Глава 3" action Start("test_map"):
             style "chapter_button"
             text_style "my_chapter_select_button"
 
@@ -418,10 +447,10 @@ label choice_scene:
         
         if _return == "mfc" and mfc_choice:
             
-            jump test_map
+            jump mfc_scene
 
         elif _return == "mfc" and not mfc_choice:
-            $ renpy.notify("Сейчас это не принесёт пользы. Подумай ещё.")
+            $ renpy.notify("Они щас закрыты на обед")
             $ renpy.pause(0.5)
 
         elif _return == "bank" and bank_choice:
@@ -456,7 +485,58 @@ label choice_scene:
 
 
 label mfc_scene:
-    "Ты пришёл в МФЦ."
+    show mfc_holl with fade
+    "Раз вы решили продолжить покупку вторичного жилья, нужно убедиться, что продавец действительно имеет право распоряжаться квартирой."
+
+    "Для этого вы предлагаете вместе обратиться за выпиской из ЕГРН."
+
+    "В этом документе вас прежде всего интересует графа «Собственники»."
+
+
+    show expression player_mfc with fade
+
+    "Спустя несколько минут документ оказывается у вас в руках."
+
+    "Вы внимательно проверяете сведения."
+
+    "Продавец действительно указан как собственник недвижимости."
+
+    "Это хороший знак: теперь формальных препятствий для сделки нет."
+
+    "Вы чувствуете себя спокойнее."
+
+    "Следующий шаг — зарегистрировать дальнейшие действия."
+
+    show expression player_mfc_tiket with fade
+
+    "Вы подходите к терминалу и берёте талон."
+    "На табло загорается ваш номер."
+
+    show expression player_mfc_window with fade
+
+    "Вы подходите к окну."
+
+    mfc "Вы уже проверили собственника. Теперь следующий шаг — оформление сделки."
+
+    mfc "Для этого вам потребуется нотариус."
+
+    "Вы немного удивляетесь."
+
+    player "Нотариус? Значит, всё серьёзнее, чем казалось."
+
+    mfc "Да. Нотариус удостоверяет сделку и проверяет документы сторон."
+
+    mfc "Без этого безопасно завершить покупку не получится."
+
+    "Вы киваете и делаете заметку."
+    
+    $ mfc_choice = False
+    $ lawyer_choice = True
+    jump choice_scene
+
+   
+
+    
     return
 
 # ========================================
@@ -590,6 +670,7 @@ label realtor_scene_0:
 
         "Взять кредит":
             $ bank_choice = True
+            $ realtor_choice = False
             jump choice_scene
 
         "Украсть деньги":
@@ -681,9 +762,96 @@ label give_deposit:
     character_realtor "Точнее, ключи я вам передам завтра, после того как оформлю документы у нее. Главное — квартира ваша!"
 
     scene realtor_bilding_image with fade
-    show expression player_agency as player_sprite at pos_far_left_active with dissolve
+    show expression player_agency as player_sprite at pos_far_right_active with dissolve
     "Вы приходите в офис агентства Мечта в 10 утра, как договорились. Офис закрыт. На двери табличка Технический перерыв."
-    jump test_map
+
+    show expression player_call as player_sprite at pos_far_right_active with dissolve
+    show realtor_dmitriy_call as realtor_sprite at pos_far_left_inactive with dissolve
+    player "Дмитрий, добрый день, я у офиса. Мы же договаривались?"
+
+    show expression player_call as player_sprite at pos_far_right_inactive with dissolve
+    show realtor_dmitriy_call as realtor_sprite at pos_far_left_active with dissolve
+    character_realtor "А, здравствуйте. По вашей ситуации... К сожалению, хозяйка передумала."
+    character_realtor "Решила не продавать квартиру. Или продать другому. В общем, сделка не состоится."
+    
+    show expression player_call as player_sprite at pos_far_right_active with dissolve
+    show realtor_dmitriy_call as realtor_sprite at pos_far_left_inactive with dissolve
+    player "Как не состоится?! А мои 300 000? Возвращайте деньги!"
+
+    show expression player_call as player_sprite at pos_far_right_inactive with dissolve
+    show realtor_dmitriy_call as realtor_sprite at pos_far_left_active with dissolve
+    character_realtor "Какие деньги? Вы же вчера внесли аванс. Аванс, в случае отказа покупателя от сделки, не возвращается. Вы отказываетесь — деньги наши. Всё по расписке."
+
+    show expression player_call as player_sprite at pos_far_right_active with dissolve
+    show realtor_dmitriy_call as realtor_sprite at pos_far_left_inactive with dissolve
+    player "Но отказываетесь вы, а не я! И это был задаток!"
+
+    show expression player_call as player_sprite at pos_far_right_inactive with dissolve
+    show realtor_dmitriy_call as realtor_sprite at pos_far_left_active with dissolve
+    character_realtor "В расписке черным по белому написано: 'в качестве аванса'. Задаток должен был оформляться отдельным договором с собственником. У вас его нет. Все претензии — к хозяйке, а она, как я говорил, уже в Германии. Удачи."
+
+    scene expression player_crying with fade
+    
+    "Сделка сорвалась… но деньги уже не вернуть."
+
+    "Вы потеряли 300 000 рублей — все свои накопления."
+    "Расписка оказалась недействительной."
+    "Стресс и чувство обмана накрывают с головой."
+
+    "Полиция принимает заявление, но предупреждает — шансы найти мошенников минимальны."
+
+    pause 1.0
+
+    "Вы стали жертвой."
+
+    pause 1.0
+
+    jump lesson_scene
+
+label lesson_scene:
+    $ realtor_choice = False
+    $ mfc_choice = True
+    call screen lesson_popup
+    
+    if _return == "choice_scene":
+        jump choice_scene
+
+screen lesson_popup():
+    add "gui/select_bg.jpg"
+    modal True
+    zorder 200
+
+    add Solid("#000000aa")
+
+    frame:
+        xalign 0.5
+        yalign 0.5
+        xsize 700
+        padding (30, 25)
+        background "#b4b1b1ee"
+        
+
+        vbox:
+            spacing 15
+
+            text "Урок" size 36 bold True xalign 0.5
+
+            text "Аванс — это риск.\nЗадаток — это договор с ответственностью сторон.\nНикогда не передавайте деньги риелтору без проверки документов и участия собственника.":
+                
+                color "#333333"
+
+            text "Благодаря полученному опыту вам доступны новые действия:"
+                
+
+            text "• Проверить собственника через МФЦ\n• Рассмотреть покупку у застройщика":
+               
+                color "#444444"
+        
+            textbutton "Продолжить":
+                xalign 0.5
+                action Return("choice_scene")  
+
+
 
 label prison_scene:
     scene expression player_robbery with fade

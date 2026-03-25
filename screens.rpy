@@ -24,13 +24,13 @@ screen character_select():
         # Мужской персонаж
         imagebutton:
             idle "gui/artem.png"
-            # hover "gui/avatar_boy_hover.png"  # подсвеченная версия (опционально)
+            
             action SetVariable("player_gender", "male"), Jump("after_select")
         
         # Женский персонаж
         imagebutton:
             idle "gui/elin.png"
-            # hover "gui/avatar_girl_hover.png"
+           
             action SetVariable("player_gender", "female"), Jump("after_select")
         
        
@@ -1614,7 +1614,7 @@ screen quick_menu():
             textbutton _("Назад") action Rollback()
             textbutton _("Пропуск") action Skip() alternate Skip(fast=True, confirm=True)
             textbutton _("Авто") action Preference("auto-forward", "toggle")
-            textbutton _("Меню") action ShowMenu()
+            textbutton _("Меню") action ShowMenu("pause_menu")
 
 
 style window:
