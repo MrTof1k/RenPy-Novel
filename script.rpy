@@ -8,9 +8,12 @@
     risk_choice = False
     safe_choice = False
     wait_choice = False
+    lawyer_hire = False
 
     mfc_choice = False
+    mfc_choice_index = 0
     bank_choice = False
+    bank_choice_index = 0
     realtor_choice = False
     realtor_choice_index = 0
     lawyer_choice = False
@@ -34,6 +37,7 @@
     player_mfc = "artem_mfc"
     player_mfc_tiket = "artem_mfc_tiket"
     player_mfc_window = "artem_mfc_window"
+    player_backpack_doc = "artem_backpack_doc"
 
 # Трансформации
 transform pos_far_left_active:
@@ -78,6 +82,7 @@ init:
 
     # Спрайты Артёма
     image artem_backpack = "Images/artem_character/artem_backpack.png" #Артём с рюкзаком
+    image artem_backpack_doc = "Images/artem_character/artem_backpack_doc.png" #Артём с рюкзаком и документами
     image artem_perplexity = "Images/artem_character/artem_perplexity.png"
     image artem_interested = "Images/artem_character/artem_interested.png"
     image artem_agency = "Images/artem_character/artem_agency.png"
@@ -95,6 +100,7 @@ init:
 
     # Спрайты Элин
     image elin_backpack = "Images/elin_character/elin_backpack.png" #Элин с рюкзаком
+    image elin_backpack_doc = "Images/elin_character/elin_backpack_doc.png" #Элин с рюкзаком и документами
     image elin_perplexity = "Images/elin_character/elin_perplexity.png" #Элин в недоумении
     image elin_interested = "Images/elin_character/elin_interested.png"
     image elin_agency = "Images/elin_character/elin_agency.png"
@@ -125,14 +131,23 @@ init:
     #Спрайты мфц
     image mfc_holl = "Images/mfc/mfc_holl.png"
 
+    #Спрайты нотариюса/юриста
+    image notary_bilding_interior = "Images/notary/notary_bilding_interior.png"
+    image notary_bilding = "Images/notary/notary_bilding.png"
+    image lawyer_character = "Images/notary/lawyer_character.png"
+
     # Спрайты банка
     image bank_scene_image = "Images/bank_scene/bank_scene.png" #фон банка
     image bank_specialist = "Images/bank_scene/bank_specialist.png" #специалист банка
     image bank_specialist_writes = "Images/bank_scene/bank_specialist_writes.png" #специалист банка записывает
     image bank_specialist_surprised = "Images/bank_scene/bank_specialist_surprised.png" #Удивлённый банкир
-    
+    image contracts = "Images/bank_scene/contracts.png"
+
     # другие спрайты 
     image test_image = "gui/test.jpg" # фон для теста
+
+    #Спрайты продавца
+    image seller_character = "Images/seller/seller_character.png"
 
 
     #Спрайты карты
@@ -149,7 +164,10 @@ init:
     default character_realtor = Character('Дмитрий', color = "#57ad4c")
     default bankir = Character('Специалист банка: ', color = "#57ad4c")
     default mfc = Character('Сотрудник МФЦ', color = "#57ad4c")
-
+    default notary = Character('Нотариус', color = "#57ad4c")
+    default lawyer = Character('Юрист', color = "#57ad4c")
+    default seller = Character('Продавец', color = "#57ad4c")
+    
 # ========================================
 # ТОЧКА ВХОДА
 # ========================================
@@ -194,6 +212,7 @@ screen character_select:
                 SetVariable("player_prison", "artem_prison"),
                 SetVariable("player_perplexity", "artem_perplexity"),
                 SetVariable("player_backpack", "artem_backpack"),
+                SetVariable("player_backpack_doc", "artem_backpack_doc"),
                 SetVariable("player_strit", "artem_strit"),
                 SetVariable("player_interested", "artem_interested"),
                 SetVariable("player_maney", "artem_maney"),
@@ -220,6 +239,7 @@ screen character_select:
                 SetVariable("player_prison", "elin_prison"),
                 SetVariable("player_perplexity", "elin_perplexity"),
                 SetVariable("player_backpack", "elin_backpack"),
+                SetVariable("player_backpack_doc", "elin_backpack_doc"),
                 SetVariable("player_strit", "elin_strit"),
                 SetVariable("player_interested", "elin_interested"),
                 SetVariable("player_maney", "elin_maney"),
@@ -485,54 +505,61 @@ label choice_scene:
 
 
 label mfc_scene:
-    show mfc_holl with fade
-    "Раз вы решили продолжить покупку вторичного жилья, нужно убедиться, что продавец действительно имеет право распоряжаться квартирой."
+    if mfc_choice_index == 0:
+        show mfc_holl with fade
+        "Раз вы решили продолжить покупку вторичного жилья, нужно убедиться, что продавец действительно имеет право распоряжаться квартирой."
 
-    "Для этого вы предлагаете вместе обратиться за выпиской из ЕГРН."
+        "Для этого вы предлагаете вместе обратиться за выпиской из ЕГРН."
 
-    "В этом документе вас прежде всего интересует графа «Собственники»."
+        "В этом документе вас прежде всего интересует графа «Собственники»."
 
 
-    show expression player_mfc with fade
+        show expression player_mfc with fade
 
-    "Спустя несколько минут документ оказывается у вас в руках."
+        "Спустя несколько минут документ оказывается у вас в руках."
 
-    "Вы внимательно проверяете сведения."
+        "Вы внимательно проверяете сведения."
 
-    "Продавец действительно указан как собственник недвижимости."
+        "Продавец действительно указан как собственник недвижимости."
 
-    "Это хороший знак: теперь формальных препятствий для сделки нет."
+        "Это хороший знак: теперь формальных препятствий для сделки нет."
 
-    "Вы чувствуете себя спокойнее."
+        "Вы чувствуете себя спокойнее."
 
-    "Следующий шаг — зарегистрировать дальнейшие действия."
+        "Следующий шаг — зарегистрировать дальнейшие действия."
 
-    show expression player_mfc_tiket with fade
+        show expression player_mfc_tiket with fade
 
-    "Вы подходите к терминалу и берёте талон."
-    "На табло загорается ваш номер."
+        "Вы подходите к терминалу и берёте талон."
+        "На табло загорается ваш номер."
 
-    show expression player_mfc_window with fade
+        show expression player_mfc_window with fade
 
-    "Вы подходите к окну."
+        "Вы подходите к окну."
 
-    mfc "Вы уже проверили собственника. Теперь следующий шаг — оформление сделки."
+        mfc "Вы уже проверили собственника. Теперь следующий шаг — оформление сделки."
 
-    mfc "Для этого вам потребуется нотариус."
+        mfc "Для этого вам потребуется нотариус."
 
-    "Вы немного удивляетесь."
+        "Вы немного удивляетесь."
 
-    player "Нотариус? Значит, всё серьёзнее, чем казалось."
+        player "Нотариус? Значит, всё серьёзнее, чем казалось."
 
-    mfc "Да. Нотариус удостоверяет сделку и проверяет документы сторон."
+        mfc "Да. Нотариус удостоверяет сделку и проверяет документы сторон."
 
-    mfc "Без этого безопасно завершить покупку не получится."
+        mfc "Без этого безопасно завершить покупку не получится."
 
-    "Вы киваете и делаете заметку."
+        "Вы киваете и делаете заметку."
+        
+        $ mfc_choice = False
+        $ lawyer_choice = True
+        jump choice_scene
+    elif mfc_choice_index == 1:
+        jump test_map
     
-    $ mfc_choice = False
-    $ lawyer_choice = True
-    jump choice_scene
+    else:
+        jump test_map
+
 
    
 
@@ -543,34 +570,99 @@ label mfc_scene:
 # Сцена в банке с её исходами
 # ========================================
 label bank_scene:
+    if bank_choice_index == 0:
+        scene bank_scene_image with fade
+
+        show expression player_backpack as player_sprite at pos_far_left_inactive
+        show bank_specialist as bank_specialist at pos_far_right_inactive
+
+        show expression player_backpack as player_sprite at pos_far_left_active with dissolve
+        show bank_specialist as bank_specialist at pos_far_right_inactive with dissolve
+        player "Здравствуйте! Хочу получить предварительное одобрение на ипотеку для покупки квартиры."
+
+        show bank_specialist as bank_specialist at pos_far_right_active with dissolve
+        show expression player_backpack as player_sprite at pos_far_left_inactive with dissolve
+        bankir "Добрый день. Рад помочь."
+        bankir "Для расчета нам понадобятся данные: ваши паспортные данные, информация о трудоустройстве и официальных доходах за последние 6 месяцев"
+        bankir "А также примерная стоимость квартиры и размер первоначального взноса." 
+        
+        show expression player_backpack as player_sprite at pos_far_left_active with dissolve
+        show bank_specialist as bank_specialist at pos_far_right_inactive with dissolve
+        menu:
+            "Как поступить?"
+
+            "Быстрый, но рискованный вариант":
+                jump bank_chice_A
+
+            "Документально-аналитический вариант":
+                jump bank_chice_B
+
+
+        return
+
+    elif bank_choice_index == 1:
+        scene bank_scene_image with fade
+        show expression player_backpack as player_sprite at pos_far_left_inactive
+        show bank_specialist as bank_specialist at pos_far_right_inactive
+        "Деньги за квартиру не передаются из рук в руки — это опасно."
+        "Самый безопасный способ — расчёт через банковскую ячейку или аккредитив."
+
+        show expression player_backpack as player_sprite at pos_far_left_inactive
+        show bank_specialist as bank_specialist at pos_far_right_active
+        bankir "Мы подготовили договор аренды ячейки."
+        bankir "Ключ будет у вас, второй — у банка. Доступ продавца к деньгам возможен только при предъявлении выписки из ЕГРН с вашим именем как нового собственника."
+        bankir "Это прописано здесь, в дополнительном соглашении."
+
+        menu:
+            "Проверить договор?"
+            "Да, я проверяю этот пункт":
+                jump bank_chice_C_1
+
+            "Ладно, я доверяю":
+                jump bank_chice_C_2
+        
+    else:
+        jump test_map
+
+label bank_chice_C_1:
+    scene contracts with fade
+    player "Хорошо, всё зафиксировано. Без регистрации деньги никто не получит."
+    $ grant_achievement("financial_security")
+    jump bank_chice_D
+    
+label bank_chice_C_2:
     scene bank_scene_image with fade
 
-    show expression player_backpack as player_sprite at pos_far_left_inactive
-    show bank_specialist as bank_specialist at pos_far_right_inactive
-
     show expression player_backpack as player_sprite at pos_far_left_active with dissolve
     show bank_specialist as bank_specialist at pos_far_right_inactive with dissolve
-    player "Здравствуйте! Хочу получить предварительное одобрение на ипотеку для покупки квартиры."
+    player "Наверное, всё стандартно… не буду вникать."
 
-    show bank_specialist as bank_specialist at pos_far_right_active with dissolve
+    "Вы не убедились, что доступ продавца ограничен условиями регистрации. Это создаёт риск потери денег."
+    jump bank_chice_D   
+
+label bank_chice_D:
+    scene bank_scene_image with fade
+
+    show expression player_backpack as player_sprite at pos_far_left_active with dissolve
+    show seller_character as seller_character at pos_far_right_inactive with dissolve
+    player "И я кладу в ячейку только 90%% суммы."
+    player "Оставшиеся 10%% передам продавцу после полной переписки счетов в управляющей компании, как мы и договаривались."
+
     show expression player_backpack as player_sprite at pos_far_left_inactive with dissolve
-    bankir "Добрый день. Рад помочь."
-    bankir "Для расчета нам понадобятся данные: ваши паспортные данные, информация о трудоустройстве и официальных доходах за последние 6 месяцев"
-    bankir "А также примерная стоимость квартиры и размер первоначального взноса." 
-    
-    show expression player_backpack as player_sprite at pos_far_left_active with dissolve
-    show bank_specialist as bank_specialist at pos_far_right_inactive with dissolve
-    menu:
-        "Как поступить?"
+    show seller_character as seller_character at pos_far_right_active with dissolve
+    seller "Договорились. Так безопасно для всех."
 
-        "Быстрый, но рискованный вариант":
-            jump bank_chice_A
+    show expression player_backpack as player_sprite at pos_far_left_inactive
+    show bank_specialist as seller_character at pos_far_right_active
+    bankir "Отлично. Договор подписан. Срок аренды ячейки — 14 дней. Этого достаточно для регистрации."
+    $bank_choice = False
+    $mfc_choice = True
+    $mfc_choice_index = 1
 
-        "Документально-аналитический вариант":
-            jump bank_chice_B
+    jump choice_scene
 
 
-    return
+
 
 label bank_chice_A:
     scene bank_scene_image with fade
@@ -843,29 +935,87 @@ screen lesson_popup():
             text "Благодаря полученному опыту вам доступны новые действия:"
                 
 
-            text "• Проверить собственника через МФЦ\n• Рассмотреть покупку у застройщика":
+            text "Проверить собственника через МФЦ\n• Рассмотреть покупку у застройщика":
                
                 color "#444444"
         
             textbutton "Продолжить":
                 xalign 0.5
                 action Return("choice_scene")  
+    
+   
 
 
+# ========================================
+# Сцена у Юриста с её исходами
+# ========================================
+label lawyer_scene:
+        scene notary_bilding with fade
+        "После проверки документов в МФЦ и подтверждения, что продавец — реальный собственник, наступает этап юридического оформления задатка и предварительного договора."
+        "От того, как будут прописаны условия, зависит, сможет ли ты вернуть деньги в случае срыва сделки."
+
+        menu:
+            "Юрист поможет вам избежать типичных ошибок и составит договор с защитой ваших интересов"
+            "Нанять юриста?"
+
+            "Отдать 15.000₽ за юриста":
+                $lawyer_hire = True
+            
+            "Справлюсь сам":
+                $lawyer_hire = False
+
+        scene notary_bilding_interior with fade
+        show expression player_backpack as player_sprite at pos_far_right_inactive with dissolve
+        show seller_character as seller_character at pos_far_left_active with dissolve
+        seller "Ну что, я предлагаю не тянуть. Давайте внесёте задаток 100 000 рублей, я напишу расписку, и будем считать, что договорились."
+            
+        if lawyer_hire:
+            show lawyer_character as player_sprite at pos_far_right_active with dissolve
+            show seller_character as seller_character at pos_far_left_inactive with dissolve
+            lawyer "Это риск. Расписка без договора — это аванс, а не задаток."
+            lawyer "При срыве сделки по вине продавца вы получите только сумму обратно, без штрафа"
+
+            show lawyer_character as player_sprite at pos_far_right_inactive with dissolve
+            show seller_character as seller_character at pos_far_left_active with dissolve
+            seller "Это слишком жестко. Я могу просто передумать продавать, а вы получите назад только ваш задаток без компенсации."
+
+            show lawyer_character as player_sprite at pos_far_right_active with dissolve
+            show seller_character as seller_character at pos_far_left_inactive with dissolve
+            lawyer "Коллега, такие условия — стандартная практика для защиты обеих сторон. Это не доверие, а юридическая гарантия." 
+            lawyer "Если вы откажетесь без оснований, покупатель получит\n200 000 рублей. Это мотивирует исполнить обязательства. "
+
+            show lawyer_character as player_sprite at pos_far_right_inactive with dissolve
+            show seller_character as seller_character at pos_far_left_active with dissolve
+            seller "Хорошо я согласна, довайте составим договор"
+
+            $ grant_achievement("legally_savvy")
+            scene notary_bilding with fade
+            show expression player_backpack_doc as player_sprite at pos_far_left_active with dissolve
+            "У вас на руках предварительный договор с защитой, вы смогли себя обезопасить"
+            "Хорошобы положить деньги в банк для передачи"
+            $ lawyer_choice = False
+            $ bank_choice = True
+            $ bank_choice_index = 1
+            jump choice_scene
+            
+
+
+        else:
+            scene notary_bilding with fade
+            show expression player_backpack_doc as player_sprite at pos_far_left_active with dissolve
+            "Вы выбрали самый рискованный вариант. При срыве сделки вы не сможете взыскать штраф"
+            "Хорошобы положить деньги в банк для передачи"
+            $ lawyer_choice = False
+            $ bank_choice = True
+            $ bank_choice_index = 1
+            jump choice_scene
+    
 
 label prison_scene:
     scene expression player_robbery with fade
     "Во время ограбления сработала сигнализация и вас поймали"
     scene expression player_prison with fade
     "по ст. 158 УК РФ вы осуждены на срок 10 лет"
-    
-    return  
-
-# label lawyer_scene:
-#     "Ты пришёл к юристу."
-#     return
-
-
 
 label test_map:
     scene test_image
