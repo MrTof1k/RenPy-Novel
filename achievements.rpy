@@ -23,9 +23,13 @@ init python:
             "title": "Юридически подкован",
             "desc": "Нанять юриста"
         },
-        "financial_security":{
+        "financial_security": {
             "title": "Финансовая безопасность",
             "desc": "Проверить договор в банке"
+        },
+        "homeowner": {
+            "title": "Новый домовладелец",
+            "desc": "Купить квартиру"
         }
     }
 
